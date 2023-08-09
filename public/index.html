@@ -23,7 +23,7 @@
             const birthDate = document.getElementById('birthDate').value;
             const birthTime = document.getElementById('birthTime').value;
             const birthLocation = document.getElementById('birthLocation').value;
-            fetch('https://xv23ml-3000.csb.app/astro', {
+            fetch('/astro', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

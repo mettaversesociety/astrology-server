@@ -3,19 +3,14 @@ import { urlencoded, json, static as expressStatic} from 'express';
 import pkg from 'circular-natal-horoscope-js';
 import ephemeris from 'ephemeris';
 import moment from 'moment';
-import cors from 'cors';
 
 const app = express();
 const port = 3000;
 
-app.use(cors());
-
 app.use(urlencoded({ extended: true }));
 app.use(json());
 app.use(expressStatic('public'));
-app.use(cors({ origin: true, credentials: true }));
 
-app.options('*', cors({ origin: true, credentials: true })); // include before other routes
 app.post('/astro', async (req, res) => {
   try {
       let birthDateTime = req.body.birthDate + 'T' + req.body.birthTime + 'Z';
