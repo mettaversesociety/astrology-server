@@ -9,11 +9,12 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
 
-app.post('/', async (req, res) => {
+app.post('/astro', async (req, res) => {
   // try {
       const birthDateTime = new Date(req.body.birthDate + 'T' + req.body.birthTime + 'Z');
       const birthLocation = req.body.birthLocation;
-      res.send(await birthDateTime)      
+      // res.send(await birthDateTime) 
+      console.log("HI Y ", req.body)     
       // const response = await fetch(`https://nominatim.openstreetmap.org/search?city=${birthLocation}&format=json`);
   //     if (!response.ok) {
   //         throw new Error(`HTTP error! status: ${response.status}`);
