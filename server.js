@@ -6,10 +6,15 @@ import moment from 'moment';
 
 const app = express();
 const port = 3000;
+import cors from 'cors';
+
+app.use(cors());
 
 app.use(urlencoded({ extended: true }));
 app.use(json());
 app.use(expressStatic('public'));
+
+app.options('*', cors()); // include before other routes
 
 app.post('/astro', async (req, res) => {
   try {
