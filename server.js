@@ -3,10 +3,10 @@ import { urlencoded, json, static as expressStatic} from 'express';
 import pkg from 'circular-natal-horoscope-js';
 import ephemeris from 'ephemeris';
 import moment from 'moment';
+import cors from 'cors';
 
 const app = express();
 const port = 3000;
-import cors from 'cors';
 
 app.use(cors());
 
