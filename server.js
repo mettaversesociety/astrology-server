@@ -1,5 +1,7 @@
+
 import express from 'express';
 import { urlencoded, json, static as expressStatic} from 'express';
+import cors from 'cors';
 import pkg from 'circular-natal-horoscope-js';
 import ephemeris from 'ephemeris';
 import moment from 'moment';
@@ -7,6 +9,7 @@ import moment from 'moment';
 const app = express();
 const port = 3000;
 
+app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(urlencoded({ extended: true }));
 app.use(json());
 app.use(expressStatic('public'));
@@ -15,25 +18,28 @@ app.post('/astro', async (req, res) => {
   try {
       let birthDateTime = req.body.birthDate + 'T' + req.body.birthTime + 'Z';
       birthDateTime = moment(birthDateTime).isValid() ? new Date(birthDateTime) : new Date("1986-04-23T06:21:00Z");
-      
+
       let birthLocation = req.body.birthLocation;
       const url = `https://nominatim.openstreetmap.org/search?format=json&q=${birthLocation}`;
       const response = await fetch(url);
-      
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        console.error(`HTTP error! status: ${response.status}`);
+        return res.status(400).send('Invalid input.');
       } else if (!response.headers.get('content-type').startsWith('application/json')) {
-        throw new Error(`Invalid content type! Expected application/json but received ${response.headers.get('content-type')}`);
+        console.error(`Invalid content type! Expected application/json but received ${response.headers.get('content-type')}`);
+        return res.status(400).send('Invalid input.');
       }
-      
+
       const data = await response.json();
       if (data.length === 0) {
-        throw new Error(`No location found matching '${birthLocation}'`);
+        console.error(`No location found matching '${birthLocation}'`);
+        return res.status(400).send('Invalid location.');
       }
-      
+
       const latitude = parseFloat(data[0].lat);
       const longitude = parseFloat(data[0].lon);
-      
+
       const ephemerisData = await ephemeris.getAllPlanets(birthDateTime, longitude, latitude, 0);
 
       const origin = new pkg.Origin({
@@ -68,11 +74,10 @@ app.post('/astro', async (req, res) => {
       res.json({ result });
   } catch (error) {
       console.error(error);
-      res.status(500).send('An error occurred while calculating astrological data.');
+      res.status(400).send('An error occurred. Please check your input and try again.');
   }
 });
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
-
