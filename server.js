@@ -144,7 +144,7 @@ connectToDatabase()
     });
 
   // API endpoint to update player record
-  app.post('/update-player-record', async (req, res) => {
+  app.patch('/update-player-record', async (req, res) => {
     try {
       // Get data from request body
       const { discordUserId, birthDate, birthTime, birthLocation, astroData } = req.body;
