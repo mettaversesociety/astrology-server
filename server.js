@@ -143,6 +143,12 @@ connectToDatabase()
       res.json({ player });
     });
 
+    app.get('/api/player-record', async (req, res) => {
+      const discordUserId = req.session.discordUserId;
+      const player = await playerCollection.findOne({ discordUserId });
+      res.json({ player });
+    });
+
   // API endpoint to update player record
   app.patch('/update-player-record', async (req, res) => {
     try {
