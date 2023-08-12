@@ -22,9 +22,14 @@
             .then(response => response.json())
             .then(data => {
               const player = data.player;
-              if (!player || !player.sunSign || !player.moonSign || !player.ascendantSign || !player.midheavenSign) {
+              console.log("PLAYER ", player)
+              if (player.sunSign || player.moonSign || player.ascendantSign || player.midheavenSign) {
+                document.getElementById('astroForm').style.display = 'none';
+              } else {
                 document.getElementById('astroForm').style.display = 'block';
               }
+              document.getElementById('astroData').textContent = JSON.stringify(player);
+
             });
         };
 
