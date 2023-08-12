@@ -32,84 +32,86 @@
 
             });
         };
-
-        document.getElementById('astroForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const birthDate = document.getElementById('birthDate').value;
-            const birthTime = document.getElementById('birthTime').value;
-            const birthLocation = document.getElementById('birthLocation').value;
-            // fetch from astrology-api just-server branch
-            fetch('https://l8ngt6-3000.csb.app/astro', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ birthDate, birthTime, birthLocation }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('astroData').textContent = JSON.stringify(data, null, 2);
-                astroData = data.result;
-                // After receiving the astrological data, send it to your server to update the player record
-                fetch('/get-discord-user-id')
-                    .then(response => response.json())
-                    .then(data => {
-
-                        console.log('BLAHBLAH ', JSON.stringify({
-                                discordUserId: data.discordUserId, // Replace with the actual Discord user ID
-                                birthDate,
-                                birthTime,
-                                birthLocation, 
-                                astroData
-                            })
-                            )
-                        return fetch('/update-player-record', {
-                            method: 'PATCH',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                discordUserId: data.discordUserId, // Replace with the actual Discord user ID
-                                birthDate,
-                                birthTime,
-                                birthLocation,
-                                astroData
-                            }),
-                        })
+        var astroForm = document.getElementById('astroForm');
+        if(astroForm) {
+            document.getElementById('astroForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const birthDate = document.getElementById('birthDate').value;
+                const birthTime = document.getElementById('birthTime').value;
+                const birthLocation = document.getElementById('birthLocation').value;
+                // fetch from astrology-api just-server branch
+                fetch('https://l8ngt6-3000.csb.app/astro', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ birthDate, birthTime, birthLocation }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('astroData').textContent = JSON.stringify(data, null, 2);
+                    astroData = data.result;
+                    // After receiving the astrological data, send it to your server to update the player record
+                    fetch('/get-discord-user-id')
                         .then(response => response.json())
-                        .then(data => console.log(data))
-                        .catch((error) => {
-                            console.error('Error:', error);
-                        });
-                    })
-            });
-        });
+                        .then(data => {
 
-        new Awesomplete(document.querySelector("#birthLocation"), {
-            list: [
-                // North America
-                "New York", "Los Angeles", "Chicago", "Houston", "Phoenix", 
-                "Philadelphia", "San Antonio", "San Diego", "Dallas", "San Jose",
-                "Toronto", "Vancouver", "Montreal", "Mexico City", "Guadalajara",
-                
-                // South America
-                "São Paulo", "Buenos Aires", "Lima", "Bogotá", "Rio de Janeiro",
-                
-                // Europe
-                "London", "Berlin", "Paris", "Rome", "Madrid", 
-                "Barcelona", "Amsterdam", "Athens", "Dublin", "Oslo",
-                
-                // Asia
-                "Tokyo", "Beijing", "Shanghai", "Mumbai", "Delhi",
-                "Bangkok", "Seoul", "Jakarta", "Manila", "Singapore",
-                
-                // Africa
-                "Cairo", "Lagos", "Johannesburg", "Nairobi", "Casablanca",
-                
-                // Australia
-                "Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide"
-            ]
-        });
+                            console.log('BLAHBLAH ', JSON.stringify({
+                                    discordUserId: data.discordUserId, // Replace with the actual Discord user ID
+                                    birthDate,
+                                    birthTime,
+                                    birthLocation, 
+                                    astroData
+                                })
+                                )
+                            return fetch('/update-player-record', {
+                                method: 'PATCH',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    discordUserId: data.discordUserId, // Replace with the actual Discord user ID
+                                    birthDate,
+                                    birthTime,
+                                    birthLocation,
+                                    astroData
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => console.log(data))
+                            .catch((error) => {
+                                console.error('Error:', error);
+                            });
+                        })
+                });
+            });
+
+            new Awesomplete(document.querySelector("#birthLocation"), {
+                list: [
+                    // North America
+                    "New York", "Los Angeles", "Chicago", "Houston", "Phoenix", 
+                    "Philadelphia", "San Antonio", "San Diego", "Dallas", "San Jose",
+                    "Toronto", "Vancouver", "Montreal", "Mexico City", "Guadalajara",
+                    
+                    // South America
+                    "São Paulo", "Buenos Aires", "Lima", "Bogotá", "Rio de Janeiro",
+                    
+                    // Europe
+                    "London", "Berlin", "Paris", "Rome", "Madrid", 
+                    "Barcelona", "Amsterdam", "Athens", "Dublin", "Oslo",
+                    
+                    // Asia
+                    "Tokyo", "Beijing", "Shanghai", "Mumbai", "Delhi",
+                    "Bangkok", "Seoul", "Jakarta", "Manila", "Singapore",
+                    
+                    // Africa
+                    "Cairo", "Lagos", "Johannesburg", "Nairobi", "Casablanca",
+                    
+                    // Australia
+                    "Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide"
+                ]
+            });
+    }
     </script>
 </body>
 </html>
